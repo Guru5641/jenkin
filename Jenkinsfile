@@ -1,10 +1,28 @@
 pipeline {
 
-    agent any
+    parameters {
+
+        string(
+            name: 'IMAGE_VERSION',
+            defaultValue: 'v0',
+            description: 'Docker image version to build and deploy'
+        )
+
+        choice(
+            name: 'AGENT',
+            choices: [
+                'built-in',
+            ],
+            description: 'Select Jenkins agent'
+        )
+    }
+
+    agent {
+        label "${params.AGENT}"
+    }
 
     environment {
         IMAGE = "guru5641/node"
-        TAG   = "v${BUILD_NUMBER}"
     }
 
     stages {
@@ -18,7 +36,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 sh '''
-                    docker build -t ${IMAGE}:${TAG} ./app
+                    docker build -t ${IMAGE}:${IMAGE_VERSION} ./app
                 '''
             }
         }
@@ -44,7 +62,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 sh '''
-                    docker push ${IMAGE}:${TAG}
+                    docker push ${IMAGE}:${IMAGE_VERSION}
                 '''
             }
         }
@@ -97,7 +115,7 @@ pipeline {
 
     post {
         success {
-            echo "Deployment successful: ${IMAGE}:${TAG}"
+            echo "Deployment successful: ${IMAGE}:${IMAGE_VERSION}"
         }
 
         failure {
