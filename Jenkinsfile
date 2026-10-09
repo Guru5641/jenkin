@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "praveenedward/node"
+        IMAGE = "guru5641/node"
         TAG   = "v${BUILD_NUMBER}"
     }
 
