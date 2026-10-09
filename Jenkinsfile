@@ -89,7 +89,7 @@ pipeline {
         stage('Deploy Kubernetes') {
             steps {
                 sh '''
-                    kubectl apply -f k8s/
+                    kubectl apply -f K8s/
                 '''
             }
         }
